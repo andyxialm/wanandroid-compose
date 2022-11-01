@@ -1,6 +1,5 @@
 package cn.refactor.wancompose.ui.home
 
-import android.os.Bundle
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.Navigator
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import cn.refactor.wancompose.R

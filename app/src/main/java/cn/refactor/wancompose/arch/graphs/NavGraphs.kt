@@ -16,6 +16,8 @@ sealed class NavGraphs(val route: String) {
         @get:DrawableRes val iconResourceId: Int
         val route: String
     }
+    // 主页 Main
+    object MAIN: NavGraphs("main")
 
     // 首页
     object HOME: NavGraphs("home"), BottomNavItem {

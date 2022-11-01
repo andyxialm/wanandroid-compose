@@ -22,9 +22,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import cn.refactor.wancompose.arch.graphs.NavGraphs
@@ -45,31 +47,58 @@ import cn.refactor.wancompose.ui.web.WebScreen
 fun WanApp() {
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
         val navController = rememberNavController()
-        Scaffold(
-            bottomBar = { BottomNavigationBar(navController = navController) }
-        ) { innerPadding ->
-            NavHost(navController, startDestination = NavGraphs.HOME.route, Modifier.padding(innerPadding)) {
-                composable(NavGraphs.HOME.route) {
-                    HomeScreen(navController)
-                }
-                composable(NavGraphs.SQUARE.route) {
-                    SquareScreen(navController)
-                }
-                composable(NavGraphs.PROJECT.route) {
-                    ProjectScreen(navController)
-                }
-                composable(NavGraphs.BLOG.route) {
-                    BlogScreen(navController)
-                }
-                composable(NavGraphs.PROFILE.route) {
-                    ProfileScreen(navController)
-                }
-                composable(NavGraphs.WEB.route, arguments = listOf(navArgument("url") {})) {
-                    WebScreen(navController, it.arguments?.getString("url"))
-                }
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentDestination = navBackStackEntry?.destination
+        if (isInsideOfMainScreen(currentDestination?.route)) {
+            Scaffold(
+                bottomBar = { BottomNavigationBar(navController = navController) }
+            ) { innerPadding ->
+                NavigationHost(navController, Modifier.padding(innerPadding))
+            }
+        } else {
+            NavigationHost(navController)
+        }
+
+    }
+}
+
+@Composable
+fun NavigationHost(
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+) {
+    NavHost(navController, NavGraphs.MAIN.route, modifier) {
+        navigation(NavGraphs.HOME.route, NavGraphs.MAIN.route) {
+            composable(NavGraphs.HOME.route) {
+                HomeScreen(navController)
+            }
+            composable(NavGraphs.SQUARE.route) {
+                SquareScreen(navController)
+            }
+            composable(NavGraphs.PROJECT.route) {
+                ProjectScreen(navController)
+            }
+            composable(NavGraphs.BLOG.route) {
+                BlogScreen(navController)
+            }
+            composable(NavGraphs.PROFILE.route) {
+                ProfileScreen(navController)
             }
         }
+        composable(NavGraphs.WEB.route, arguments = listOf(navArgument("url") {})) {
+            WebScreen(navController, it.arguments?.getString("url"))
+        }
     }
+}
+
+fun isInsideOfMainScreen(currentRoute: String?): Boolean = when(currentRoute) {
+    NavGraphs.MAIN.route,
+    NavGraphs.HOME.route,
+    NavGraphs.SQUARE.route,
+    NavGraphs.PROJECT.route,
+    NavGraphs.BLOG.route,
+    NavGraphs.PROFILE.route -> true
+    else -> false
 }
 
 @Composable
