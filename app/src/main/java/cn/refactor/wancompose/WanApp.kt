@@ -26,6 +26,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import cn.refactor.wancompose.arch.graphs.NavGraphs
 import cn.refactor.wancompose.arch.graphs.mainBottomNavigationItems
 import cn.refactor.wancompose.ui.blog.BlogScreen
@@ -33,6 +34,7 @@ import cn.refactor.wancompose.ui.home.HomeScreen
 import cn.refactor.wancompose.ui.profile.ProfileScreen
 import cn.refactor.wancompose.ui.project.ProjectScreen
 import cn.refactor.wancompose.ui.square.SquareScreen
+import cn.refactor.wancompose.ui.web.WebScreen
 
 /**
  * Created on 2022/10/30.
@@ -61,6 +63,9 @@ fun WanApp() {
                 }
                 composable(NavGraphs.PROFILE.route) {
                     ProfileScreen(navController)
+                }
+                composable(NavGraphs.WEB.route, arguments = listOf(navArgument("url") {})) {
+                    WebScreen(navController, it.arguments?.getString("url"))
                 }
             }
         }

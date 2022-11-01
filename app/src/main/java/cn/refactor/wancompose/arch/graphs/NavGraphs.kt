@@ -55,5 +55,5 @@ sealed class NavGraphs(val route: String) {
     // 登录页
     object LOGIN: NavGraphs("login")
     // Web页
-    object WEB: NavGraphs("web")
+    object WEB: NavGraphs("web?url={url}")
 }
