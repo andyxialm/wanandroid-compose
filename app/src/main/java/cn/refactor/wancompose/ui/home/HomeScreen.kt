@@ -32,7 +32,7 @@ import cn.refactor.wancompose.R
 import cn.refactor.wancompose.arch.graphs.NavGraphs
 import cn.refactor.wancompose.model.Article
 import cn.refactor.wancompose.model.BannerData
-import cn.refactor.wancompose.ui.widget.RefreshListContainer
+import cn.refactor.wancompose.ui.widget.list.RefreshListContainer
 
 
 /**
@@ -41,10 +41,10 @@ import cn.refactor.wancompose.ui.widget.RefreshListContainer
  * @author andy
  */
 @Composable
-fun HomeScreen(navController: NavController, vm: HomeViewModel = viewModel()) {
+fun HomeScreen(navController: NavController) {
     Column {
         Toolbar(onClickSearch = { navController.navigate(NavGraphs.PROFILE.route) })
-        ListContent(vm) { url ->
+        ListContent { url ->
             navController.navigate(NavGraphs.WEB.route.replace("{url}", url))  {
                 popUpTo(navController.graph.findStartDestination().id) {
                     saveState = true

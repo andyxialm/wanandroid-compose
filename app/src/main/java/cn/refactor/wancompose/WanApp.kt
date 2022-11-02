@@ -26,7 +26,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import cn.refactor.wancompose.arch.graphs.NavGraphs
@@ -49,14 +48,14 @@ fun WanApp() {
         val navController = rememberNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
-        if (isInsideOfMainScreen(currentDestination?.route)) {
-            Scaffold(
-                bottomBar = { BottomNavigationBar(navController = navController) }
-            ) { innerPadding ->
-                NavigationHost(navController, Modifier.padding(innerPadding))
+        Scaffold(
+            bottomBar = {
+                if (isInsideOfMainScreen(currentDestination?.route)) {
+                    BottomNavigationBar(navController = navController)
+                }
             }
-        } else {
-            NavigationHost(navController)
+        ) { innerPadding ->
+            NavigationHost(navController, Modifier.padding(innerPadding))
         }
 
     }
@@ -67,23 +66,21 @@ fun NavigationHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
-    NavHost(navController, NavGraphs.MAIN.route, modifier) {
-        navigation(NavGraphs.HOME.route, NavGraphs.MAIN.route) {
-            composable(NavGraphs.HOME.route) {
-                HomeScreen(navController)
-            }
-            composable(NavGraphs.SQUARE.route) {
-                SquareScreen(navController)
-            }
-            composable(NavGraphs.PROJECT.route) {
-                ProjectScreen(navController)
-            }
-            composable(NavGraphs.BLOG.route) {
-                BlogScreen(navController)
-            }
-            composable(NavGraphs.PROFILE.route) {
-                ProfileScreen(navController)
-            }
+    NavHost(navController, NavGraphs.HOME.route, modifier) {
+        composable(NavGraphs.HOME.route) {
+            HomeScreen(navController)
+        }
+        composable(NavGraphs.SQUARE.route) {
+            SquareScreen(navController)
+        }
+        composable(NavGraphs.PROJECT.route) {
+            ProjectScreen(navController)
+        }
+        composable(NavGraphs.BLOG.route) {
+            BlogScreen(navController)
+        }
+        composable(NavGraphs.PROFILE.route) {
+            ProfileScreen(navController)
         }
         composable(NavGraphs.WEB.route, arguments = listOf(navArgument("url") {})) {
             WebScreen(navController, it.arguments?.getString("url"))

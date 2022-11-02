@@ -29,7 +29,7 @@ fun WebScreen(
     navController: NavController,
     url: String?
 ) {
-    Column(Modifier.fillMaxWidth()) {
+    Column {
         Toolbar {
             navController.popBackStack()
         }

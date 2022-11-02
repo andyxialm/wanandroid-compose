@@ -28,7 +28,7 @@ fun WanMultiStateBox(
     modifier: Modifier = Modifier,
     contentAlignment: Alignment = Alignment.TopStart,
     propagateMinConstraints: Boolean = false,
-    state: State = State(MultiState.Content),
+    state: MultiState = MultiState(State.Content),
     onReload: () -> Unit,
     userDefined: @Composable () -> Unit = {},
     content: @Composable BoxScope.() -> Unit
