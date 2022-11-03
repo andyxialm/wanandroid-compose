@@ -33,8 +33,7 @@ fun WanMultiStateBox(
     userDefined: @Composable () -> Unit = {},
     content: @Composable BoxScope.() -> Unit
 ) {
-    MultiStateBox(
-        modifier = modifier,
+    MultiStateBox(modifier = modifier,
         contentAlignment = contentAlignment,
         propagateMinConstraints = propagateMinConstraints,
         state = state,
@@ -64,8 +63,7 @@ private fun EmptyComposable() {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.align(Alignment.Center)) {
             Text(
-                text = stringResource(R.string.multi_state_text_face),
-                fontSize = 60.sp
+                text = stringResource(R.string.multi_state_text_face), fontSize = 60.sp
             )
             Spacer(Modifier.height(14.dp))
             Text(text = stringResource(R.string.multi_state_text_empty))
@@ -78,8 +76,7 @@ private fun ErrorComposable() {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.align(Alignment.Center)) {
             Text(
-                text = stringResource(R.string.multi_state_text_face),
-                fontSize = 60.sp
+                text = stringResource(R.string.multi_state_text_face), fontSize = 60.sp
             )
             Spacer(Modifier.height(14.dp))
             Text(text = stringResource(R.string.multi_state_text_error))
@@ -92,13 +89,12 @@ private fun NetworkErrorComposable(reload: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.align(Alignment.Center)) {
             Text(
-                text = stringResource(R.string.multi_state_text_face),
-                fontSize = 60.sp
+                text = stringResource(R.string.multi_state_text_face), fontSize = 60.sp
             )
             Spacer(Modifier.height(14.dp))
             Text(text = stringResource(R.string.multi_state_text_network_error))
             Spacer(Modifier.height(14.dp))
-            Button(onClick = { reload() }) {
+            Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = { reload() }) {
                 Text(text = stringResource(R.string.multi_state_text_network_error_retry))
             }
         }

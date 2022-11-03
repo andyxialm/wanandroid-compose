@@ -26,19 +26,22 @@ class HomePagingSource : PagingSource<Int, Any>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Any> {
         return withContext(Dispatchers.IO) {
-            val list = mutableListOf<Any>().apply {
+            val list = mutableListOf<Any>()
+            try {
                 if (params.key == 0) {
                     // 顶部 Banner
                     val bannerResponse = Get<List<Banner>>(Api.HOME_BANNER_LIST).await()
-                    add(BannerData(bannerResponse))
+                    list.add(BannerData(bannerResponse))
 
                     // 首页置顶文章
-                    addAll(Get<List<Article>>(Api.HOME_TOP_ARTICLE_LIST).await())
+                    list.addAll(Get<List<Article>>(Api.HOME_TOP_ARTICLE_LIST).await())
                 }
 
                 // 首页文章列表
                 val articleList = Get<HomeArticleListResponse>(Api.HOME_ARTICLE_LIST.format(page)).await().datas
-                addAll(articleList)
+                list.addAll(articleList)
+            } catch(e: Exception) {
+                return@withContext LoadResult.Error(e)
             }
             LoadResult.Page(
                 data = list,

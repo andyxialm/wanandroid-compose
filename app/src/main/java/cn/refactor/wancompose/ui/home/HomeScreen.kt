@@ -14,7 +14,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -32,7 +31,7 @@ import cn.refactor.wancompose.R
 import cn.refactor.wancompose.arch.graphs.NavGraphs
 import cn.refactor.wancompose.model.Article
 import cn.refactor.wancompose.model.BannerData
-import cn.refactor.wancompose.ui.widget.list.RefreshListContainer
+import cn.refactor.wancompose.ui.widget.list.RefreshStateLazyColumn
 
 
 /**
@@ -45,7 +44,7 @@ fun HomeScreen(navController: NavController) {
     Column {
         Toolbar(onClickSearch = { navController.navigate(NavGraphs.PROFILE.route) })
         ListContent { url ->
-            navController.navigate(NavGraphs.WEB.route.replace("{url}", url))  {
+            navController.navigate(NavGraphs.WEB.route.replace("{url}", url)) {
                 popUpTo(navController.graph.findStartDestination().id) {
                     saveState = true
                 }
@@ -74,25 +73,22 @@ fun ListContent(
     onClick: (url: String) -> Unit
 ) {
     val uiState = vm.uiState
-    val refreshing = uiState.refreshing.observeAsState().value
     val lazyPagingItems = uiState.list.collectAsLazyPagingItems()
 
-    RefreshListContainer(
-        isRefreshing = refreshing == true,
+    RefreshStateLazyColumn(
         modifier = Modifier.fillMaxSize(),
-        onRefresh = { vm.fetchData() }
+        lazyPagingItems = lazyPagingItems,
     ) {
         items(items = lazyPagingItems) { data ->
             when (data) {
+                is BannerData -> {
+                    Text(text = "我是 Banner，别来沾边！", modifier = Modifier.fillMaxSize())
+                    Spacer(modifier = Modifier.height(30.dp))
+                }
                 is Article -> {
                     ArticleCard(model = data) { url ->
                         onClick(url)
                     }
-                }
-
-                is BannerData -> {
-                    Text(text = "我是 Banner，别来沾边！", modifier = Modifier.fillMaxSize())
-                    Spacer(modifier = Modifier.height(30.dp))
                 }
             }
         }
@@ -116,7 +112,11 @@ fun ArticleCard(model: Article, onClick: (url: String) -> Unit) {
                 if (model.isTop() || model.hasTags()) {
                     Row {
                         if (model.isTop()) {
-                            Text(text = stringResource(R.string.article_tag_top), style = TextStyle(color = Color.Red, fontSize = 12.sp), modifier = Modifier.padding(end = 8.dp))
+                            Text(
+                                text = stringResource(R.string.article_tag_top),
+                                style = TextStyle(color = Color.Red, fontSize = 12.sp),
+                                modifier = Modifier.padding(end = 8.dp)
+                            )
                         }
                         model.optGetFirstTag()?.let { tag ->
                             Text(text = tag.name, style = TextStyle(color = colorResource(android.R.color.holo_green_dark), fontSize = 12.sp))
