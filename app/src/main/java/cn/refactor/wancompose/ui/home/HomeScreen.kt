@@ -16,6 +16,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,6 +33,10 @@ import cn.refactor.wancompose.arch.graphs.NavGraphs
 import cn.refactor.wancompose.model.Article
 import cn.refactor.wancompose.model.BannerData
 import cn.refactor.wancompose.ui.widget.list.RefreshStateLazyColumn
+import coil.compose.AsyncImage
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 
 
 /**
@@ -81,22 +86,41 @@ fun ListContent(
     ) {
         items(items = lazyPagingItems) { data ->
             when (data) {
-                is BannerData -> {
-                    Text(text = "我是 Banner，别来沾边！", modifier = Modifier.fillMaxSize())
-                    Spacer(modifier = Modifier.height(30.dp))
-                }
-                is Article -> {
-                    ArticleCard(model = data) { url ->
-                        onClick(url)
-                    }
-                }
+                is BannerData -> BannerItem(data) { url -> onClick(url) }
+                is Article -> ArticleItem(data) { url -> onClick(url) }
             }
         }
     }
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun ArticleCard(model: Article, onClick: (url: String) -> Unit) {
+fun BannerItem(model: BannerData, onClick: (url: String) -> Unit) {
+    if (model.data.isEmpty()) return
+    val bannerList = model.data
+    val pagerState = rememberPagerState()
+
+    HorizontalPager(
+        count = bannerList.size,
+        state = pagerState,
+    ) {
+        val data = bannerList[it]
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .height(180.dp)
+                .clickable { onClick(data.url) }) {
+            AsyncImage(
+                model = data.imagePath, contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
+        }
+    }
+}
+
+@Composable
+fun ArticleItem(model: Article, onClick: (url: String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
