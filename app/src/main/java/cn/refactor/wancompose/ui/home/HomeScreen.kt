@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import cn.refactor.wancompose.R
@@ -51,13 +50,7 @@ fun HomeScreen(navController: NavController) {
     Column {
         Toolbar(onClickSearch = { navController.navigate(NavGraphs.SEARCH.route) })
         ListContent { url ->
-            navController.navigate(NavGraphs.WEB.route.replace("{url}", url)) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
+            navController.navigate(NavGraphs.WEB.route.replace("{url}", url))
         }
     }
 }
