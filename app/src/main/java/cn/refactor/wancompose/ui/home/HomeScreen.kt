@@ -63,7 +63,7 @@ fun HomeScreen(navController: NavController) {
 }
 
 @Composable
-fun Toolbar(onClickSearch: () -> Unit) {
+private fun Toolbar(onClickSearch: () -> Unit) {
     TopAppBar(
         title = { Text(stringResource(R.string.home_menu_home)) },
         actions = {
@@ -78,7 +78,7 @@ fun Toolbar(onClickSearch: () -> Unit) {
 }
 
 @Composable
-fun ListContent(
+private fun ListContent(
     vm: HomeViewModel = viewModel(),
     onClick: (url: String) -> Unit
 ) {
@@ -92,7 +92,7 @@ fun ListContent(
         items(items = lazyPagingItems) { data ->
             when (data) {
                 is BannerData -> BannerItem(data) { url -> onClick(url) }
-                is Article -> ArticleItem(data) { url -> onClick(url) }
+                is Article -> ArticleItem(model = data) { url -> onClick(url) }
             }
         }
     }
@@ -142,7 +142,11 @@ fun BannerItem(model: BannerData, onClick: (url: String) -> Unit) {
 }
 
 @Composable
-fun ArticleItem(model: Article, onClick: (url: String) -> Unit) {
+fun ArticleItem(
+    model: Article,
+    extensionContent: @Composable () -> Unit = {},
+    onClick: (url: String) -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -178,6 +182,10 @@ fun ArticleItem(model: Article, onClick: (url: String) -> Unit) {
                 // 标题
                 Text(text = model.title, style = TextStyle(fontSize = 16.sp))
                 Spacer(Modifier.height(8.dp))
+
+                // 扩展内容，可自定义
+                extensionContent()
+
                 // 作者 时间
                 Row {
                     if (model.author.isNotEmpty()) {

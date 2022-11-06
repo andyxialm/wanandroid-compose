@@ -1,19 +1,17 @@
 package cn.refactor.wancompose.ui.blog
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ScrollableTabRow
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -25,8 +23,9 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import cn.refactor.wancompose.arch.graphs.NavGraphs
 import cn.refactor.wancompose.model.Article
-import cn.refactor.wancompose.model.Blogger
+import cn.refactor.wancompose.model.Category
 import cn.refactor.wancompose.ui.home.ArticleItem
+import cn.refactor.wancompose.ui.widget.ScrollableTabBar
 import cn.refactor.wancompose.ui.widget.list.RefreshStateLazyColumn
 import cn.refactor.wancompose.ui.widget.state.State
 import cn.refactor.wancompose.ui.widget.state.WanMultiStateBox
@@ -72,7 +71,7 @@ fun BlogScreen(navController: NavController) {
                 state = pagerState,
             ) {
                 BloggerPage(
-                    blogger = bloggers[it]
+                    category = bloggers[it]
                 ) { url ->
                     navController.navigate(NavGraphs.WEB.route.replace("{url}", url)) {
                         popUpTo(navController.graph.findStartDestination().id) {
@@ -90,12 +89,12 @@ fun BlogScreen(navController: NavController) {
 @Suppress("UNCHECKED_CAST")
 @Composable
 fun BloggerPage(
-    blogger: Blogger,
+    category: Category,
     vm: BlogPagerViewModel = viewModel(
-        key = blogger.id.toString(),
+        key = category.id.toString(),
         factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return BlogPagerViewModel(blogger.id.toString()) as T
+                return BlogPagerViewModel(category.id.toString()) as T
             }
         }
     ),
@@ -110,36 +109,31 @@ fun BloggerPage(
     ) {
         items(items = lazyPagingItems) { data ->
             when (data) {
-                is Article -> ArticleItem(data) { url -> onClick(url) }
+                is Article -> ArticleItem(model = data) { url -> onClick(url) }
             }
         }
     }
 }
 
 @Composable
-private fun Toolbar(
-    tabs: List<Blogger>,
+fun Toolbar(
+    tabs: List<Category>,
     selectedTabIndex: Int,
     onClickTab: (index: Int) -> Unit) {
-    if (tabs.isEmpty()) return
-    TopAppBar {
-        ScrollableTabRow(
-            selectedTabIndex = selectedTabIndex,
+    ScrollableTabBar(
+        tabs = tabs,
+        selectedTabIndex = selectedTabIndex,
+        onClickTab = onClickTab
+    ) { index, data ->
+        val textColor = if (selectedTabIndex == index) Color.White else Color.Unspecified
+        Text(
+            text = data.name,
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.Bottom),
-            edgePadding = 0.dp
-        ) {
-            tabs.forEachIndexed { index, t ->
-                Text(
-                    text = t.name,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onClickTab(index) }
-                        .padding(8.dp),
-                    textAlign = TextAlign.Center,
-                )
-            }
-        }
+                .align(Alignment.Center)
+                .padding(8.dp),
+            textAlign = TextAlign.Center,
+            color = textColor
+        )
     }
 }

@@ -1,4 +1,4 @@
-package cn.refactor.wancompose.ui.blog
+package cn.refactor.wancompose.ui.project
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,18 +14,18 @@ import com.drake.net.Get
  *
  * @author andy
  */
-class BlogViewModel : ViewModel() {
-    var bloggersUiState = BloggerUiState()
+class ProjectViewModel : ViewModel() {
+    var uiState = ProjectUiState()
         private set
 
-    fun fetchBloggers() {
-        bloggersUiState.apply {
-            if (bloggers.value.isNotEmpty()) return
+    fun fetchCategories() {
+        uiState.apply {
+            if (categories.value.isNotEmpty()) return
             state.value = State.Loading
             scopeLife {
                 try {
-                    bloggers.value =
-                        Get<List<Category>>(Api.BLOGGERS_LIST).await().toMutableList()
+                    categories.value =
+                        Get<List<Category>>(Api.PROJECT_CATEGORIES).await().toMutableList()
                     state.value = State.Content
                 } catch (e: Exception) {
                     state.value = State.NetworkError
@@ -35,7 +35,7 @@ class BlogViewModel : ViewModel() {
     }
 }
 
-class BloggerUiState {
-    val bloggers = ListLiveData<Category>()
+class ProjectUiState {
+    val categories = ListLiveData<Category>()
     val state = MutableLiveData<State>(State.Content)
 }

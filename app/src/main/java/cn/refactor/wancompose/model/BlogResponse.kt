@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  * @author andy
  */
 @Serializable
-data class Blogger(
+data class Category(
     val articleList: List<Article>,
     val author: String,
     val courseId: Int,
