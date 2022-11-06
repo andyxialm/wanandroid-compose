@@ -23,4 +23,6 @@ object Api {
     // 登出
     const val LOGOUT = "user/logout/json"
 
+    // 公众号列表
+    const val BLOGGERS_LIST = "wxarticle/chapters/json"
 }
