@@ -62,7 +62,8 @@ fun <T : Any> RefreshStateLazyColumn(
             onReload = {
                 multiState.state = State.Loading
                 lazyPagingItems.refresh()
-            }, state = multiState
+            },
+            state = multiState
         ) {
             LazyColumn(
                 modifier = modifier,

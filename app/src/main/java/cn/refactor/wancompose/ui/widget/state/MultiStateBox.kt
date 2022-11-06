@@ -60,7 +60,5 @@ class MultiState(state: State) {
 
 @Composable
 fun rememberMultiState(state: State): MultiState {
-    return remember { MultiState(state) }.apply {
-        this.state = state
-    }
+    return remember { MultiState(state) }
 }

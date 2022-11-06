@@ -11,8 +11,10 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -34,6 +36,7 @@ import cn.refactor.wancompose.ui.blog.BlogScreen
 import cn.refactor.wancompose.ui.home.HomeScreen
 import cn.refactor.wancompose.ui.profile.ProfileScreen
 import cn.refactor.wancompose.ui.project.ProjectScreen
+import cn.refactor.wancompose.ui.search.SearchScreen
 import cn.refactor.wancompose.ui.square.SquareScreen
 import cn.refactor.wancompose.ui.web.WebScreen
 
@@ -48,14 +51,16 @@ fun WanApp() {
         val navController = rememberNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
+        val scaffoldState = rememberScaffoldState()
         Scaffold(
+            scaffoldState = scaffoldState,
             bottomBar = {
                 if (isInsideOfMainScreen(currentDestination?.route)) {
                     BottomNavigationBar(navController = navController)
                 }
             }
         ) { innerPadding ->
-            NavigationHost(navController, Modifier.padding(innerPadding))
+            NavigationHost(navController, Modifier.padding(innerPadding), scaffoldState)
         }
 
     }
@@ -65,6 +70,7 @@ fun WanApp() {
 fun NavigationHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
+    scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
     NavHost(navController, NavGraphs.HOME.route, modifier) {
         composable(NavGraphs.HOME.route) {
@@ -80,10 +86,13 @@ fun NavigationHost(
             BlogScreen(navController)
         }
         composable(NavGraphs.PROFILE.route) {
-            ProfileScreen(navController)
+            ProfileScreen(navController, scaffoldState)
         }
         composable(NavGraphs.WEB.route, arguments = listOf(navArgument("url") {})) {
             WebScreen(navController, it.arguments?.getString("url"))
+        }
+        composable(NavGraphs.SEARCH.route) {
+            SearchScreen(navController)
         }
     }
 }

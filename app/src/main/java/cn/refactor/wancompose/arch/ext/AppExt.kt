@@ -5,6 +5,7 @@ import cn.refactor.wancompose.arch.WanApplication
 import cn.refactor.wancompose.arch.network.Api
 import cn.refactor.wancompose.arch.network.SerializationConverter
 import com.drake.net.NetConfig
+import com.drake.net.cookie.PersistentCookieJar
 import com.drake.net.okhttp.setConverter
 import com.drake.net.okhttp.setDebug
 import okhttp3.Cache
@@ -17,7 +18,7 @@ import java.util.concurrent.TimeUnit
  */
 fun WanApplication.initNetwork(): WanApplication {
     NetConfig.initialize(Api.HOST, this) {
-        // 超时配置, 默认是10秒, 设置太长时间会导致用户等待过久
+        cookieJar(PersistentCookieJar(this@initNetwork))
         connectTimeout(30, TimeUnit.SECONDS)
         readTimeout(30, TimeUnit.SECONDS)
         writeTimeout(30, TimeUnit.SECONDS)

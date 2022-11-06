@@ -10,7 +10,11 @@
     <string name="refresh_load_more_error_retry">加载失败，点击重试</string>
     <string name="refresh_load_complete">无更多数据</string>
 
+    <string name="snack_under_construction">👷 正在施工</string>
+    <string name="snack_confirm_ok">OK</string>
+
     <string name="home_menu_home">首页</string>
+    <string name="home_menu_search">搜索</string>
     <string name="home_menu_square">广场</string>
     <string name="home_menu_project">项目</string>
     <string name="home_menu_blog">博客</string>
@@ -25,7 +29,17 @@
 
     <string name="accessibility_toolbar_back">返回</string>
     <string name="accessibility_toolbar_search">搜索</string>
+    <string name="accessibility_toolbar_avatar">头像</string>
 
     <string name="web_title">详情</string>
+
+    <string name="profile_user_card_logout">未登录</string>
+    <string name="profile_user_card_coil">积分：%s</string>
+    <string name="profile_settings_collect">我的收藏</string>
+    <string name="profile_settings_article">我的文章</string>
+    <string name="profile_settings_system">应用设置</string>
+    <string name="profile_settings_website">开源网站</string>
+    <string name="profile_settings_join">加入我们</string>
+    <string name="profile_settings_about">关于我们</string>
 
 </resources>

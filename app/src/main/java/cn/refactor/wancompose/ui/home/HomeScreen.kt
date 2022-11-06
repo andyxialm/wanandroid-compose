@@ -49,7 +49,7 @@ import com.lt.compose_views.image_banner.ImageBanner
 @Composable
 fun HomeScreen(navController: NavController) {
     Column {
-        Toolbar(onClickSearch = { navController.navigate(NavGraphs.PROFILE.route) })
+        Toolbar(onClickSearch = { navController.navigate(NavGraphs.SEARCH.route) })
         ListContent { url ->
             navController.navigate(NavGraphs.WEB.route.replace("{url}", url)) {
                 popUpTo(navController.graph.findStartDestination().id) {

@@ -58,4 +58,6 @@ sealed class NavGraphs(val route: String) {
     object LOGIN: NavGraphs("login")
     // Web页
     object WEB: NavGraphs("web?url={url}")
+    // 搜索
+    object SEARCH: NavGraphs("search")
 }
