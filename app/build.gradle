@@ -81,7 +81,7 @@ dependencies {
     implementation "androidx.paging:paging-compose:1.0.0-alpha17"
 
     // Network
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
     implementation "com.squareup.okhttp3:okhttp:4.10.0"
     implementation "com.github.liangjingkanji:Net:3.5.2"
@@ -92,4 +92,8 @@ dependencies {
 
     // Coil
     implementation "io.coil-kt:coil-compose:$coil_version"
+
+    // Compose Views
+    implementation("com.github.ltttttttttttt:ComposeViews:$compose_views_version")
+
 }

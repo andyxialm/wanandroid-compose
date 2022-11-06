@@ -1,13 +1,17 @@
 package cn.refactor.wancompose.ui.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -34,9 +38,7 @@ import cn.refactor.wancompose.model.Article
 import cn.refactor.wancompose.model.BannerData
 import cn.refactor.wancompose.ui.widget.list.RefreshStateLazyColumn
 import coil.compose.AsyncImage
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
+import com.lt.compose_views.image_banner.ImageBanner
 
 
 /**
@@ -66,7 +68,10 @@ fun Toolbar(onClickSearch: () -> Unit) {
         title = { Text(stringResource(R.string.home_menu_home)) },
         actions = {
             IconButton(onClick = { onClickSearch() }) {
-                Icon(painter = painterResource(R.drawable.ic_toolbar_search), contentDescription = stringResource(R.string.accessibility_toolbar_search))
+                Icon(
+                    painter = painterResource(R.drawable.ic_toolbar_search),
+                    contentDescription = stringResource(R.string.accessibility_toolbar_search)
+                )
             }
         }
     )
@@ -93,30 +98,47 @@ fun ListContent(
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun BannerItem(model: BannerData, onClick: (url: String) -> Unit) {
     if (model.data.isEmpty()) return
-    val bannerList = model.data
-    val pagerState = rememberPagerState()
-
-    HorizontalPager(
-        count = bannerList.size,
-        state = pagerState,
-    ) {
-        val data = bannerList[it]
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-                .height(180.dp)
-                .clickable { onClick(data.url) }) {
-            AsyncImage(
-                model = data.imagePath, contentDescription = null,
-                contentScale = ContentScale.Crop
-            )
-        }
-    }
+    ImageBanner(
+        imageSize = model.data.size,
+        imageContent = {
+            val data = model.data[index]
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .aspectRatio(16 / 9F)
+                    .clickable { onClick(data.url) }) {
+                AsyncImage(
+                    model = data.imagePath, contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
+            }
+        },
+        indicatorItem = {
+            Column {
+                Spacer(
+                    modifier = Modifier
+                        .size(10.dp, 4.dp)
+                        .background(Color.Gray, RoundedCornerShape(4.dp))
+                )
+                Spacer(Modifier.height(8.dp))
+            }
+        },
+        selectIndicatorItem = {
+            Column {
+                Spacer(
+                    modifier = Modifier
+                        .size(10.dp, 4.dp)
+                        .background(Color.Green, RoundedCornerShape(4.dp))
+                )
+                Spacer(Modifier.height(8.dp))
+            }
+        },
+        autoScrollTime = 3000L
+    )
 }
 
 @Composable
@@ -143,7 +165,12 @@ fun ArticleItem(model: Article, onClick: (url: String) -> Unit) {
                             )
                         }
                         model.optGetFirstTag()?.let { tag ->
-                            Text(text = tag.name, style = TextStyle(color = colorResource(android.R.color.holo_green_dark), fontSize = 12.sp))
+                            Text(
+                                text = tag.name, style = TextStyle(
+                                    color = colorResource(android.R.color.holo_green_dark),
+                                    fontSize = 12.sp
+                                )
+                            )
                         }
                     }
                     Spacer(Modifier.height(8.dp))
@@ -154,10 +181,18 @@ fun ArticleItem(model: Article, onClick: (url: String) -> Unit) {
                 // 作者 时间
                 Row {
                     if (model.author.isNotEmpty()) {
-                        Text(text = model.author, style = TextStyle(colorResource(android.R.color.darker_gray), fontSize = 12.sp), modifier = Modifier.padding(end = 8.dp))
+                        Text(
+                            text = model.author, style = TextStyle(
+                                colorResource(android.R.color.darker_gray), fontSize = 12.sp
+                            ), modifier = Modifier.padding(end = 8.dp)
+                        )
                     }
                     if (model.niceDate.isNotEmpty()) {
-                        Text(text = model.niceDate, style = TextStyle(colorResource(android.R.color.darker_gray), fontSize = 12.sp))
+                        Text(
+                            text = model.niceDate, style = TextStyle(
+                                colorResource(android.R.color.darker_gray), fontSize = 12.sp
+                            )
+                        )
                     }
                 }
             }

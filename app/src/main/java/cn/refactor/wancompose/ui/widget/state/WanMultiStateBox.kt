@@ -52,8 +52,8 @@ private fun LoadingComposable() {
         CircularProgressIndicator(
             modifier = Modifier
                 .align(Alignment.Center)
-                .width(50.dp)
-                .height(50.dp)
+                .width(40.dp)
+                .height(40.dp)
         )
     }
 }
