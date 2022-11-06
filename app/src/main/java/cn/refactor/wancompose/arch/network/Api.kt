@@ -25,4 +25,7 @@ object Api {
 
     // 公众号列表
     const val BLOGGERS_LIST = "wxarticle/chapters/json"
+
+    // 公众号文章列表
+    const val BLOGGER_ARTICLE_LIST = "wxarticle/list/%s/%d/json"
 }

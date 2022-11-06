@@ -1,7 +1,6 @@
 package cn.refactor.wancompose.ui.blog
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,9 +16,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
+import cn.refactor.wancompose.arch.graphs.NavGraphs
+import cn.refactor.wancompose.model.Article
 import cn.refactor.wancompose.model.Blogger
+import cn.refactor.wancompose.ui.home.ArticleItem
+import cn.refactor.wancompose.ui.widget.list.RefreshStateLazyColumn
 import cn.refactor.wancompose.ui.widget.state.State
 import cn.refactor.wancompose.ui.widget.state.WanMultiStateBox
 import cn.refactor.wancompose.ui.widget.state.rememberMultiState
@@ -34,14 +42,10 @@ import kotlinx.coroutines.launch
  *
  * @author andy
  */
-@Composable
-fun BlogScreen(navController: NavController) {
-    BloggerPage()
-}
-
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun BloggerPage(vm: BlogViewModel = viewModel()) {
+fun BlogScreen(navController: NavController) {
+    val vm: BlogViewModel = viewModel()
     val uiState = vm.bloggersUiState
     val multiState = uiState.state.observeAsState().value
     val bloggers = uiState.bloggers.observeAsState().value
@@ -67,9 +71,46 @@ fun BloggerPage(vm: BlogViewModel = viewModel()) {
                 count = bloggers.size,
                 state = pagerState,
             ) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Text(text = bloggers[it].name, modifier = Modifier.align(Alignment.Center))
+                BloggerPage(
+                    blogger = bloggers[it]
+                ) { url ->
+                    navController.navigate(NavGraphs.WEB.route.replace("{url}", url)) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
+            }
+        }
+    }
+}
+
+@Suppress("UNCHECKED_CAST")
+@Composable
+fun BloggerPage(
+    blogger: Blogger,
+    vm: BlogPagerViewModel = viewModel(
+        key = blogger.id.toString(),
+        factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return BlogPagerViewModel(blogger.id.toString()) as T
+            }
+        }
+    ),
+    onClick: (url: String) -> Unit = {},
+) {
+    val uiState = vm.uiState
+    val lazyPagingItems = uiState.list.collectAsLazyPagingItems()
+
+    RefreshStateLazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        lazyPagingItems = lazyPagingItems,
+    ) {
+        items(items = lazyPagingItems) { data ->
+            when (data) {
+                is Article -> ArticleItem(data) { url -> onClick(url) }
             }
         }
     }

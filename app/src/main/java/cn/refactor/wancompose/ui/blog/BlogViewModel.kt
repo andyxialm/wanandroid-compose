@@ -20,6 +20,7 @@ class BlogViewModel : ViewModel() {
 
     fun fetchBloggers() {
         bloggersUiState.apply {
+            if (bloggers.value.isNotEmpty()) return
             state.value = State.Loading
             scopeLife {
                 try {

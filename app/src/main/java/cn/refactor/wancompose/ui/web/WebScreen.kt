@@ -1,5 +1,6 @@
 package cn.refactor.wancompose.ui.web
 
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebView
@@ -24,6 +25,7 @@ import cn.refactor.wancompose.R
  *
  * @author andy
  */
+@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun WebScreen(
     navController: NavController,
@@ -47,6 +49,13 @@ fun WebScreen(
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             ViewGroup.LayoutParams.MATCH_PARENT
                         )
+                        settings.apply {
+                            javaScriptEnabled = true
+                            javaScriptCanOpenWindowsAutomatically = true
+                            domStorageEnabled = true
+                            loadsImagesAutomatically = true
+                            mediaPlaybackRequiresUserGesture = false
+                        }
                         webChromeClient = WebChromeClient()
                         webViewClient = WebViewClient()
                         url?.let { loadUrl(it) }
