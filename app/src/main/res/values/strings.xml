@@ -41,5 +41,6 @@
     <string name="profile_settings_website">开源网站</string>
     <string name="profile_settings_join">加入我们</string>
     <string name="profile_settings_about">关于我们</string>
+    <string name="profile_logout">退出登录</string>
 
 </resources>

@@ -37,4 +37,7 @@ object Api {
 
     // 登出
     const val LOGOUT = "user/logout/json"
+
+    // 个人积分
+    const val USERINFO = "lg/coin/userinfo/json"
 }

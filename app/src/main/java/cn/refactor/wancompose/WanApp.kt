@@ -34,6 +34,7 @@ import cn.refactor.wancompose.arch.graphs.NavGraphs
 import cn.refactor.wancompose.arch.graphs.mainBottomNavigationItems
 import cn.refactor.wancompose.ui.blog.BlogScreen
 import cn.refactor.wancompose.ui.home.HomeScreen
+import cn.refactor.wancompose.ui.login.LoginScreen
 import cn.refactor.wancompose.ui.profile.ProfileScreen
 import cn.refactor.wancompose.ui.project.ProjectScreen
 import cn.refactor.wancompose.ui.search.SearchScreen
@@ -93,6 +94,9 @@ fun NavigationHost(
         }
         composable(NavGraphs.SEARCH.route) {
             SearchScreen(navController)
+        }
+        composable(NavGraphs.LOGIN.route) {
+            LoginScreen(navController)
         }
     }
 }

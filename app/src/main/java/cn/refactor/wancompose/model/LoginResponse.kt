@@ -34,5 +34,9 @@ data class User(
     var publicName: String = "",
     var token: String = "",
     var type: Int = 0,
-    var username: String = ""
+    var username: String = "",
+    // 积分补充字段
+    var level: Int = 0,
+    var rank: String = "",
+    var userId: Int = 0,
 ): BaseBean()

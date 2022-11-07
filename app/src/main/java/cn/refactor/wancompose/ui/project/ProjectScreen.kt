@@ -151,7 +151,9 @@ fun ProjectDescContent(model: Article) {
             AsyncImage(
                 model = model.envelopePic, contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.width(80.dp)
+                modifier = Modifier
+                    .width(90.dp)
+                    .height(180.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
